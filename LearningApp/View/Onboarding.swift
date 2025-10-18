@@ -6,12 +6,12 @@
 //
 import SwiftUI
 
-struct ContentView: View {
+struct Onboarding: View {
     var body: some View {
   // Text
     }
 }
 
 #Preview {
-    ContentView()
+    Onboarding()
 }
