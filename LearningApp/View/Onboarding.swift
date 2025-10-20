@@ -86,7 +86,7 @@ struct Onboarding: View {
                                 .frame(width: 97, height: 48)
                                 .background(
                                     RoundedRectangle(cornerRadius: 120)
-                                        .fill(Color.orange)
+                                        .fill(Color.orangeButton)
                                 )
                         }
                   
@@ -135,7 +135,7 @@ struct Onboarding: View {
                     .frame(width: 182, height: 48)
                     .background(
                         RoundedRectangle(cornerRadius: 120)
-                            .fill(Color.orange)
+                            .fill(Color.orangeButton)
                     )
             }
             .overlay(
