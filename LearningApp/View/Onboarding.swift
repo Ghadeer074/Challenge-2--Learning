@@ -10,123 +10,138 @@ import SwiftUI
 struct Onboarding: View {
     var body: some View {
         NavigationStack {
-            
-            //App logo
-            ZStack {
-                Circle()
-                    .frame(width: 130, height: 130)
-                    .foregroundStyle(.black)
-                    .shadow(color: .orange, radius: 23)
-                    .tint(.orange)
+            VStack{
+                //App logo
+                ZStack {
+                    Circle()
+                        .frame(width: 109, height: 109)
+                        .foregroundStyle(.black)
+                    //.shadow(color: .orange, radius: 23)
+                        .tint(.orange)
+                        .glassEffect(.clear.tint(.orange))
+                    
+                    Image(systemName: "flame.fill")
+                        .font(.system(size: 36, weight: .bold))
+                        .foregroundColor(Color.orange)
+                }
+                .padding(.top, 39) // Move the circle down a bit
+                .frame(maxWidth: .infinity,alignment: .center)
+                .padding(.bottom,66)
                 
-                Image(systemName: "flame.fill")
-                    .font(.system(size: 60, weight: .bold))
-                    .foregroundColor(Color.orange)
-            }
-            .padding(.top, 39) // Move the circle down a bit
-            .frame(maxWidth: .infinity,alignment: .center)
-            .padding(.bottom,66)
-            
-            
-            // welcome text
-            VStack(alignment: .leading,spacing: 6){
-                Text("Hello Learner")
-                    .font(.system(size: 40, weight: .bold))
                 
-                Text("This app will help you learn everyday!")
-                    .font(.system(size: 20))
-                    .colorMultiply(Color.gray)
-                    .padding(.trailing,53)
+                // welcome text
+                VStack(alignment: .leading,spacing: 6){
+                    Text("Hello Learner")
+                        .font(.system(size: 34, weight: .bold))
+                    
+                    Text("This app will help you learn everyday!")
+                        .font(.system(size: 17))
+                        .colorMultiply(Color.gray)
+                        .padding(.trailing,80)
+                    Spacer()//.frame(height:348)
+                }
                 
-            }
-            
-            Spacer().frame(height:350)
-            
-            //learning path
-            VStack(spacing: 2){
+                .padding(.top,-12)
+                
+                //learning path
                 VStack(spacing: 2){
-                    Text("I want to learn")
-                        .font(.system(size: 25))
+                    VStack(spacing: 2){
+                        Text("I want to learn")
+                            .font(.system(size: 22))
+                        
+                        TextField("Swift", text: .constant(""))
+                            .padding()
+                            .textFieldStyle(.plain)
+                            .font(.system(size: 22))
+                        
+                    }
+                    .padding(.trailing,229)
                     
-                    TextField("Swift", text: .constant(""))
+                    
+                    Divider()
+                        .frame(maxWidth: .infinity)
+                        .ignoresSafeArea(edges: .horizontal)
+                        .background(Color.gray.opacity(1))
+                    
+                    
+                }
+                .frame(maxHeight: .infinity, alignment: .top)
+                .padding(.top,-177)
+                
+                // Second section that was previously outside NavigationStack
+                VStack(alignment: .leading) {
+                    Text("I want to learn it in a")
+                        .font(.system(size: 22))
                         .padding()
-                        .textFieldStyle(.plain)
-                        .font(.system(size: 25))
+                        .padding(.trailing,180)
+                    
+                    
+                    // period selection
+                    HStack(alignment: .top, spacing:12){
+                        Button(action: { }) {
+                            Text("Week")
+                                .font(.system(size:15))
+                                .foregroundStyle(Color.white)
+                            //.padding()
+                                .frame(width: 97, height: 48)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 120)
+                                        .fill(Color.orange)
+                                )
+                        }
+                  
+
+                        
+                        Button(action:{ }) {
+                            Text("Month")
+                                .font(.system(size:15
+                                             ))
+                                .foregroundStyle(Color.white)
+                            // .padding()
+                                .frame(width: 97, height: 48)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 120)
+                                        .fill(Color.blackButtons)
+                                )
+                        }
+                        
+                        
+                        
+                        Button(action:{ }) {
+                            Text("Year")
+                                .font(.system(size:15))
+                                .foregroundStyle(Color.white)
+                            //.padding()
+                                .frame(width: 97, height: 48)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 120)
+                                        .fill(Color.blackButtons)
+                                )
+                        }
+                        
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading) // Move HStack to the left
+                    .padding(.horizontal)
                     
                 }
-                .padding(.trailing,224)
-                
-                
-                Divider()
-                    .frame(maxWidth: .infinity)
-                    .ignoresSafeArea(edges: .horizontal)
-                    .background(Color.gray.opacity(1))
-                
-                
+                .padding(.top,-347)
             }
-            .frame(maxHeight: .infinity, alignment: .top)
-            .padding(.top,-298)
             
-            // Second section that was previously outside NavigationStack
-            VStack {
-                Text("I want to learn it in a")
-                    .font(.system(size: 25))
-                    .padding()
-                    .padding(.top,-230)
-                    .padding(.trailing,159.5)
-                
-                
-                // period selection
-                HStack {
-                    Button(action: { }) {
-                        Text("Week")
-                            .font(.system(size:22))
-                            .foregroundStyle(Color.white)
-                            .padding()
-                            .frame(width: 110, height: 64)
-                            .background(
-                                RoundedRectangle(cornerRadius: 120)
-                                    .fill(Color.orange)
-                            )
-                    }
-                    .overlay(
+            Button(action:{ }) {
+                Text("Start Learning ")
+                    .font(.system(size:15))
+                    .foregroundStyle(Color.white)
+                //.padding()
+                    .frame(width: 182, height: 48)
+                    .background(
                         RoundedRectangle(cornerRadius: 120)
-                            .stroke(Color.orange, lineWidth: 1)
+                            .fill(Color.orange)
                     )
-                    
-                    Button(action:{ }) {
-                        Text("Month")
-                            .font(.system(size:22))
-                            .foregroundStyle(Color.white)
-                            .padding()
-                            .frame(width: 110, height: 64)
-                            .background(
-                                RoundedRectangle(cornerRadius: 120)
-                                    .fill(Color.orange)
-                            )
-                    }
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 120)
-                            .stroke(Color.orange, lineWidth: 1)
-                    )
-                    
-                    
-                    Button(action:{ }) {
-                        Text("Year")
-                            .font(.system(size:22))
-                            .foregroundStyle(Color.white)
-                            .padding()
-                            .frame(width: 110, height: 64)
-                            .background(
-                                RoundedRectangle(cornerRadius: 120)
-                                    .fill(Color.orange)
-                            )
-                    }
-                
-                    
-                
-                }
             }
+            .overlay(
+                RoundedRectangle(cornerRadius: 120)
+                    .stroke(Color.orange, lineWidth: 1))
+           
         }
     }
 }
