@@ -31,45 +31,19 @@ struct Activity: View {
             Spacer()
         }
         
+        
     }
 }
 
-struct LearningProgress {
-    var topic: String
-    var daysLearned: Int
-    var dayFreezed: Int
-}
 
-struct LearningProgressCard: View {
-    let progress: LearningProgress
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            
-            HStack(spacing: 16) {
-            }
-        }
-    }
-    
+
+
     #Preview {
+        
         Activity()
-        //ZStack {
-           // Color.black.ignoresSafeArea() // Add background so you can see the glassy effects
-            
-        //VStack {
-              
-                
-             //   LearningProgressCard(progress: LearningProgress(
-               //     topic: "Swift",
-              //     daysLearned: 4,
-                //dayFreezed: 1
-               // ))
-                //.padding()
-                
-               // Spacer()
-            }
-        }
-    
+        
+    }
+
 
 
 
