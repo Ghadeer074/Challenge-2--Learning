@@ -126,33 +126,74 @@ struct datesCard: View {
         HStack{
             ForEach(20...26, id: \.self) { date in
                 Circle()
-                    .glassEffect()
                     .fill(
                         date == 20 ? Color.blueTeal.opacity(0.4):
-                        date == 25 ? Color.orange : (21...26).contains(date) ? Color.orange.opacity(0.4): Color.clear
+                        date == 25 ? Color.orange : (21...25).contains(date) ? Color.orange.opacity(0.4): Color.clear
                            
                     )
-                
-                    .frame(width: 44, height: 44)
                    
-                
+                    .frame(width: 44, height: 44)
+                    //.glassEffect()
                     .overlay(
+                       
                         Text("\(date)")
                             .font(.system(size: 24, weight: .medium))
-                            .foregroundColor((21...24).contains(date) ? .orange : .primary)
+                            .foregroundColor(
+                                        date == 20 ? .teal :
+                                        (21...24).contains(date) ? .orange :
+                                        .primary
+                                    )
+                            
                     )
                     .frame(maxWidth: .infinity)
+                    
+            }
+        }
+        Divider().background(Color.gray.opacity(0.6))
+        
+        VStack(spacing: 10){
+            Text("Learning Swift").font(.system(size: 17, weight: .semibold)) .frame(maxWidth: .infinity, alignment: .leading)
+            
+            HStack(spacing: 10){
+                ZStack{
+                    Rectangle().frame(width: 160, height: 70)
+                        .foregroundColor(Color.orange)
+                        .cornerRadius(34)
+                        .opacity(0.4)
+                        //.glassEffect()
+                    
+                    HStack{
+                        Image(systemName: "flame.fill")
+                            .foregroundColor(Color.orange)
+                            .font(.system(size: 20, weight: .bold))
+                        Spacer().frame(width:90)
+                        
+                    }
+                    VStack{
+                        Text("3")
+                            .font(.system(size: 22, weight: .bold))
+                        
+                                  
+                        Text("Days Learend")
+                        font(.system(size: 12))
+                        
+                    }
+                }
                 
+                ZStack{
+                    Rectangle().frame(width: 160, height: 70)
+                        .foregroundColor(Color.teal)
+                        .cornerRadius(34)
+                        .opacity(0.3)
+                }
+               
             }
         }
     }
     
-//    VStack{
-//        HStack{
-//
-//        }
+   
     }
-//}
+
     #Preview {
         Activity()
         
