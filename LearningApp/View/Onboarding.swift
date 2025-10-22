@@ -4,7 +4,6 @@
 //
 //  Created by Ghadeer Fallatah on 24/04/1447 AH.
 //
-
 import SwiftUI
 
 struct Onboarding: View {
@@ -14,11 +13,9 @@ struct Onboarding: View {
                 //App logo
                 ZStack {
                     Circle()
+                        .fill(Color.orangeButton.opacity(0.1))
                         .frame(width: 109, height: 109)
-                        .foregroundStyle(.black)
-                    //.shadow(color: .orange, radius: 23)
-                        .tint(.orange)
-                        .glassEffect(.clear.tint(.orange))
+                        .glassEffect(.clear)
                     
                     Image(systemName: "flame.fill")
                         .font(.system(size: 36, weight: .bold))
@@ -131,17 +128,12 @@ struct Onboarding: View {
                 Text("Start Learning ")
                     .font(.system(size:15))
                     .foregroundStyle(Color.white)
-                //.padding()
                     .frame(width: 182, height: 48)
                     .background(
                         RoundedRectangle(cornerRadius: 120)
                             .fill(Color.orangeButton)
                     )
             }
-            .overlay(
-                RoundedRectangle(cornerRadius: 120)
-                    .stroke(Color.orange, lineWidth: 1))
-           
         }
     }
 }
