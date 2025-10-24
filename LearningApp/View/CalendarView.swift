@@ -1,8 +1,24 @@
 import SwiftUI
 
 struct CalendarView: View {
-    // Placeholder data for now — will be replaced by ViewModel later
-    let months = ["January 2025", "September 2025"]
+    // Dismiss action for the custom back button
+    @Environment(\.dismiss) private var dismiss
+
+    // UI-only placeholder data
+    let months = [
+        "January 2025",
+        "February 2025",
+        "March 2025",
+        "April 2025",
+        "May 2025",
+        "June 2025",
+        "July 2025",
+        "August 2025",
+        "September 2025",
+        "October 2025",
+        "November 2025",
+        "December 2025"
+    ]
     let weekDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
 
     var body: some View {
@@ -17,16 +33,23 @@ struct CalendarView: View {
                                 .foregroundColor(.white)
                                 .padding(.leading, 8)
 
-                            // Calendar Grid
+                            // Calendar Grid (UI-only mock)
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 12) {
+                                // Weekday headers
                                 ForEach(weekDays, id: \.self) { day in
                                     Text(day)
                                         .font(.caption)
                                         .foregroundColor(.gray)
                                 }
 
-                                // Temporary static layout — replace later with your model
-                                ForEach(1..<31) { day in
+                                // Leading blanks (static UI-only to simulate alignment)
+                                ForEach(0..<2, id: \.self) { _ in
+                                    Color.clear
+                                        .frame(height: 36)
+                                }
+
+                                // Fixed day range for UI demo (1...30)
+                                ForEach(1...30, id: \.self) { day in
                                     DayCircleView(
                                         number: day,
                                         isHighlighted: [13, 14, 20, 22].contains(day)
@@ -39,9 +62,25 @@ struct CalendarView: View {
                 .padding(.horizontal)
                 .padding(.top, 16)
             }
-            .navigationTitle("All activities")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: Button(">") { })   
+            .toolbar {
+                // Bigger inline title via principal toolbar item
+                ToolbarItem(placement: .principal) {
+                    Text("All activities")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundStyle(.primary)
+                }
+
+                // Back button on the leading side
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 17, weight: .semibold))
+                    }
+                }
+            }
         }
     }
 }
@@ -63,6 +102,7 @@ struct DayCircleView: View {
         .frame(height: 40)
     }
 }
+
 #Preview {
     CalendarView()
 }
