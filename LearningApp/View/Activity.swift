@@ -33,7 +33,7 @@ struct NavBar: View{
                 .font(.system(size: 30, weight: .bold))
                 .foregroundColor(.white)
             Spacer().frame(width: 160)
-            NavigationLink(destination: ActivityView()) {
+            NavigationLink(destination: CalendarView()) {
                 Image(systemName: "calendar")
                     .font(.system(size: 25))
                     .foregroundColor(.white)
@@ -41,7 +41,7 @@ struct NavBar: View{
                     .glassEffect(.clear)
             }
             Spacer().frame(width: 15)
-            NavigationLink(destination: ActivityView()) {
+            NavigationLink(destination: LearningGoal()) {
                 Image(systemName: "pencil.and.outline")
                     .font(.system(size: 25))
                     .foregroundColor(.white)
