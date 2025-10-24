@@ -2,199 +2,194 @@
 //  Activity.swift
 //  LearningApp
 //
-//  Created by Ghadeer Fallatah on 28/04/1447 AH.
-//
+//  Created by Ghadeer Fallatah on 30/04/1447 AH.
+
 import SwiftUI
 
 struct Activity: View {
     var body: some View {
-        
-        NavigationStack{
+        VStack(spacing: 20) {
+            Toolbar()
+            //LearningButton()
+            //freezButton()
+            ProgressCard()
             
-            VStack{
-                
-                Toolbar()
-                
-                ProgressCard()
-                Spacer().frame(height: 24)
-                
-                LearningButton()
-                Spacer().frame(height: 32)
-                
-                freezButton()
-                
-               }
-            }
         }
     }
-
+}
 
 struct Toolbar: View {
     var body: some View{
-        NavigationStack{
             VStack {
                 HStack(alignment: .top) {
                     Text("Activity")
                         .font(.system(size: 34, weight: .bold))
                         .foregroundColor(.white)
                     Spacer()
-                    
+
                     Image(systemName: "calendar")
                         .font(Font.system(size: 22))
                         .frame(width: 44, height: 44)
-                        .glassEffect()
-                    
+                        //.glassEffect()
+
                     Image(systemName: "pencil.and.outline")
                         .font(Font.system(size: 22))
                         .frame(width:44 ,height: 44)
-                        .glassEffect()
-                    
+                       // .glassEffect()
+
                 }
                 .padding(.horizontal)
                 .padding(.top)
-                
+
                 Spacer()
             }
         }
     }
-}
-
 
 struct ProgressCard: View {
     var body: some View {
-        ZStack{
-            GlassEffectContainer{
-                VStack(){
-                    HStack{
-                        Text("October 2025")
-                            .font(Font.system(size: 18, weight: .semibold))
-                        Image(systemName: "chevron.right").foregroundStyle(Color.orange).bold()
-                        
-                        Spacer()
-                        Image(systemName: "chevron.left").foregroundStyle(Color.orange).bold().padding(.trailing, 20)
-                        
-                        Image(systemName: "chevron.right").foregroundStyle(Color.orange).bold().padding(.trailing, 18)
-                       
-                    }
-                    Spacer().frame(height:12)
-
-                    datesCard()
-                }
+        ZStack {
+            RoundedRectangle(cornerRadius: 12)
+                           .fill(Color(white: 0.08))
+                           .frame(width: 395, height:134)
+                           //.shadow(radius: 1, y: 1)
+            HStack {
+                CalView()
+                Spacer().frame(width: 78)
+                //LearningPills()
             }
         }
+        //.glassEffect(.clear, in: .rect(cornerRadius: 12))
+        .offset(y: -140)
+        Spacer().frame(width: 60,height: 395)
     }
 }
 
-struct LearningButton: View {
+struct CalView: View {
     var body: some View {
-        Button("Log as Learned"){
-        }
-        .bold()
-        .font(.system(size:30))
-        .padding(100)
-        .foregroundStyle(.white)
-        .background(Circle()
-            .fill(Color.orangeButton.opacity(1))
-            .glassEffect(.clear.interactive())
-           )
-    }
-}
-
-struct freezButton: View {
-    
-    var body: some View {
-        Button("Log as Freezed"){
-        }
-        .bold()
-        .font(.system(size:16))
-        //.padding(100)
-        .foregroundStyle(.white)
-        .frame(width: 270, height: 48)
-        .glassEffect(.regular.tint(Color.blueTeal).interactive())
-        
-    }
-}
-
-struct datesCard: View {
-    var body: some View {
-        HStack{
-            ForEach(["SUN", "MON","TUE","WED","THU","FRI","SAT"], id: \.self){day in
-                Text(day)
-                    .font(Font.system(size: 14, weight: .semibold)).foregroundStyle(Color.gray).frame(maxWidth: .infinity)
-            }
-        }
-        HStack{
-            ForEach(20...26, id: \.self) { date in
-                Circle()
-                    .fill(
-                        date == 20 ? Color.blueTeal.opacity(0.4):
-                        date == 25 ? Color.orange : (21...25).contains(date) ? Color.orange.opacity(0.4): Color.clear
-                           
-                    )
-                   
-                    .frame(width: 44, height: 44)
-                    //.glassEffect()
-                    .overlay(
-                       
-                        Text("\(date)")
-                            .font(.system(size: 24, weight: .medium))
-                            .foregroundColor(
-                                        date == 20 ? .teal :
-                                        (21...24).contains(date) ? .orange :
-                                        .primary
-                                    )
-                            
-                    )
-                    .frame(maxWidth: .infinity)
-                    
-            }
-        }
-        Divider().background(Color.gray.opacity(0.6))
-        
-        VStack(spacing: 10){
-            Text("Learning Swift").font(.system(size: 17, weight: .semibold)) .frame(maxWidth: .infinity, alignment: .leading)
-            
-            HStack(spacing: 10){
-                ZStack{
-                    Rectangle().frame(width: 160, height: 70)
-                        .foregroundColor(Color.orange)
-                        .cornerRadius(34)
-                        .opacity(0.4)
-                        //.glassEffect()
-                    
-                    HStack{
-                        Image(systemName: "flame.fill")
-                            .foregroundColor(Color.orange)
-                            .font(.system(size: 20, weight: .bold))
-                        Spacer().frame(width:90)
-                        
-                    }
-                    VStack{
-                        Text("3")
-                            .font(.system(size: 22, weight: .bold))
-                        
-                                  
-                        Text("Days Learend")
-                        font(.system(size: 12))
-                        
-                    }
-                }
+        VStack{
+            HStack{
+                Text("October 2025")
+                    .font(Font.system(size: 20, weight: .semibold))
+                Image(systemName: "chevron.down").foregroundStyle(Color.orange).bold()
                 
-                ZStack{
-                    Rectangle().frame(width: 160, height: 70)
-                        .foregroundColor(Color.teal)
-                        .cornerRadius(34)
-                        .opacity(0.3)
+                Spacer().frame(width: 80, height:51)
+                
+                HStack(spacing : 3){
+                    Image(systemName: "chevron.left").foregroundStyle(Color.orange).bold().padding(.trailing, 20)
+                    Image(systemName: "chevron.right").foregroundStyle(Color.orange).bold().padding(.trailing, 18)
                 }
-               
+               .padding(.trailing,-25)
+            }
+           // Spacer().frame( width:21,height:12)
+             
+            HStack(spacing: 22){
+                ForEach(["SUN", "MON","TUE","WED","THU","FRI","SAT"], id: \.self){ day in
+                    Text(day)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.gray)
+                        
+                }
+            }
+
+            HStack(spacing: 11){
+                ForEach(20...26, id: \.self) { date in
+                    Circle()
+                        .fill(
+                            date == 20 ? Color.blueTeal.opacity(0.4) :
+                            (21...24).contains(date) ? Color.orange.opacity(0.4) :
+                            Color.clear
+                        )
+                        .foregroundColor(
+                            date == 20 ? .teal :
+                            (21...24).contains(date) ? .orange :
+                            date == 26 ? .white :
+                            .primary
+                        )
+                        
+                }
             }
         }
+            
     }
-    
    
-    }
+}
 
-    #Preview {
-        Activity()
-        
-    }
+//struct LearningPills: View {
+//    var body: some View {
+//        VStack{
+//            Text("Learning Swift").font(.system(size: 17, weight: .semibold)) .frame(maxWidth: .infinity, alignment: .leading)
+//                       
+//                       HStack(spacing: 10){
+//                           ZStack{
+//                               Rectangle().frame(width: 160, height: 70)
+//                                   .foregroundColor(Color.orange)
+//                                   .cornerRadius(34)
+//                                   .opacity(0.4)
+//                                 
+//                               
+//                               HStack{
+//                                   Image(systemName: "flame.fill")
+//                                       .foregroundColor(Color.orange)
+//                                       .font(.system(size: 20, weight: .bold))
+//                                   Spacer().frame(width:90)
+//                                   
+//                               }
+//                               VStack{
+//                                   Text("3")
+//                                       .font(.system(size: 22, weight: .bold))
+//                                   
+//                                             
+//                                   Text("Days Learend")
+//                                   font(.system(size: 12))
+//                                   
+//                               }
+//                           }
+//                           
+//                           ZStack{
+//                               Rectangle().frame(width: 160, height: 70)
+//                                   .foregroundColor(Color.teal)
+//                                   .cornerRadius(34)
+//                                   .opacity(0.3)
+//                }
+//                          
+//            }
+//        }
+//    }
+//}
+
+//struct LearningButton: View {
+//    var body: some View {
+//        Button("Log as Learned"){
+//        }
+//        .bold()
+//        .font(.system(size:30))
+//        .padding(100)
+//        .foregroundStyle(.white)
+//        .background(Circle()
+//            .fill(Color.orangeButton.opacity(1))
+//            //.glassEffect(.clear.interactive())
+//           )
+//    }
+//}
+
+//struct freezButton: View {
+//
+//    var body: some View {
+//        Button("Log as Freezed"){
+//        }
+//        .bold()
+//        .font(.system(size:16))
+//        //.padding(100)
+//        .foregroundStyle(.white)
+//        .frame(width: 270, height: 48)
+//        //.glassEffect(.regular.tint(Color.blueTeal).interactive())
+//
+//    }
+//}
+
+
+
+#Preview{
+    Activity()
+}
