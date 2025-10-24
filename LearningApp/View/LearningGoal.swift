@@ -36,7 +36,7 @@ struct LearningGoal: View {
                 // Trailing orange check button
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        // handle save/confirm action here
+                      // Action
                     }
                     label: {
                         Image(systemName: "checkmark")

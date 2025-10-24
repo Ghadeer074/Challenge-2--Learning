@@ -7,126 +7,124 @@
  import SwiftUI
 
 struct ProgressCard: View {
-    let dayLabels = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
-    let dates = [8, 9, 10, 11, 12, 13, 14]
-   
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // Month header with navigation
-            HStack {
-                HStack(spacing: 4) {
-                    Text("October 2025")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(.white)
-                    
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.orange)
-                }
+        
+        GlassEffectContainer{
+            VStack{
+                Calendar()
+                Spacer().frame(height:11)
+                Divider().foregroundColor(.gray).opacity(1)
+                Spacer().frame(height:11)
                 
-                Spacer()
-                
-                HStack(spacing: 16) {
-                    Button(action: {}) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.orange)
-                    }
-                    
-                    Button(action: {}) {
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.orange)
-                    }
-                }
-            }
-            
-            // Day labels
-            HStack(spacing: 0) {
-                ForEach(dayLabels, id: \.self) { label in
-                    Text(label)
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity)
-                }
-            }
-            
-            // Dates row
-            HStack(spacing: 0) {
-                ForEach(0..<7) { index in
-                    if index == 0 {
-                        Text("\(dates[index])")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.white)
-                            .frame(width: 44, height: 44)
-                            .background(Color.orange)
-                            .clipShape(Circle())
-                            .frame(maxWidth: .infinity)
-                    } else {
-                        Text("\(dates[index])")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }
-                }
-            }
-            
-            // Learning topic and stats
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Learning how ")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(.white)
-                
-                HStack(spacing: 12) {
-                    // Days Learned
-                    HStack(spacing: 12) {
-                        Image(systemName: "flame.fill")
-                            .font(.system(size: 28))
-                            .foregroundColor(.orange)
-                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("0")
-                                .font(.system(size: 36, weight: .bold))
-                                .foregroundColor(.white)
-                            
-                            Text("Days Learned")
-                                .font(.system(size: 15))
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 90)
-                    .background(Color.brown.opacity(0.8))
-                    .cornerRadius(50)
-                    
-                    // Days Freezed
-                    HStack(spacing: 12) {
-                        Image(systemName: "cube.fill")
-                            .font(.system(size: 28))
-                            .foregroundColor(.cyan)
-                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("0")
-                                .font(.system(size: 36, weight: .bold))
-                                .foregroundColor(.white)
-                            
-                            Text("Days Freezed")
-                                .font(.system(size: 15))
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 90)
-                    .background(Color.teal.opacity(0.3))
-                    .cornerRadius(50)
+                Text("Learning")
+                    .font(.system(size: 17).bold())
+                    .padding(.trailing,280)
+                Spacer().frame(height:19)
+                HStack{
+                    Learned()
+                    Spacer().frame(width: 12)
+                    Freezed()
                 }
             }
         }
-        .padding(20)
-        .background(Color.white.opacity(0.1))
-        .cornerRadius(30)
+        .padding(13)
+        .glassEffect(.clear,in:.rect(cornerRadius: 20))
+    
+       }
     }
+
+struct Calendar: View {
+    var body: some View {
+        VStack{
+            HStack{
+                Text("October 2025").bold().font(.system(size: 17))
+                
+                Button(action: {}) {
+                    Image(systemName: "chevron.down").font(.system(size: 17)).bold().foregroundStyle(Color.orange)
+                }
+                Spacer()
+                
+                Button(action:{}){
+                    Image(systemName: "chevron.left").foregroundStyle(Color.orange).bold().font(.system(size: 17))
+                }
+                Spacer().frame(width:20)
+                
+                Button(action:{}){
+                    Image(systemName: "chevron.right").foregroundStyle(Color.orange).bold().font(.system(size: 17))
+                }
+            }
+            Spacer().frame(height:20)
+
+            HStack{
+                ForEach(["SUN", "MON","TUE","WED","THU","FRI","SAT"], id: \.self){day in
+                      Text(day)
+                        .font(Font.system(size: 14, weight: .semibold)).foregroundStyle(Color.gray).frame(maxWidth: .infinity)
+                        }
+                    }
+                    HStack{
+                        ForEach(20...26, id: \.self) { date in
+                            Circle()
+                                .fill(
+                                    date == 20 ? Color.blueTeal.opacity(0.4):
+                                    date == 25 ? Color.orange : (21...25).contains(date) ? Color.orange.opacity(0.4): Color.clear
+                                )
+                        
+                                .frame(width: 35, height: 35)
+                                //.glassEffect()
+                                .overlay(
+                                   
+                                    Text("\(date)")
+                                        .font(.system(size: 17, weight: .semibold))
+                                        .foregroundColor(
+                                                    date == 20 ? .teal :
+                                                    (21...24).contains(date) ? .orange :
+                                                    .primary
+                                                )
+                                              )
+                                .frame(maxWidth: .infinity)
+                        }
+                      }
+                   }
+                }
+            }
+
+struct Learned: View {
+    var body: some View {
+        HStack{
+            //Spacer().frame(width: 12)
+                Image(systemName: "flame.fill").foregroundStyle(Color.orange).font(Font.system(size: 20))
+            
+            VStack(alignment: .leading){
+                Text("0").font(.system(size:24))
+                Text("Days Learned").font(.system(size: 14)).bold()
+                Spacer().frame(height: 6)
+            }
+            //.frame(width: 78, height:49)
+            Spacer().frame(width: 12)
+        }
+        .frame(width: 176 ,height:73)
+        .glassEffect(.clear.tint(Color.orange.opacity(0.25)))
     }
+}
+
+struct Freezed: View {
+  var body: some View {
+      HStack{
+          //Spacer().frame(width: 12)
+              Image(systemName: "cube.fill").foregroundStyle(Color.teal).font(Font.system(size: 20))
+          
+          VStack(alignment: .leading){
+              Text("0").font(.system(size:24))
+              Text("Days Freezed").font(.system(size: 14)).bold()
+              Spacer().frame(height: 6)
+          }
+          //.frame(width: 78, height:49)
+          Spacer().frame(width: 12)
+      }
+      .frame(width: 176 ,height:73)
+      .glassEffect(.clear.tint(Color.teal.opacity(0.23)))
+    }
+}
 
 #Preview {
     ProgressCard()
