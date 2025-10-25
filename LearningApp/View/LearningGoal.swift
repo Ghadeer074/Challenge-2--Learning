@@ -8,16 +8,19 @@ import SwiftUI
 
 struct LearningGoal: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var showAlert = false
+    @State private var topic: String = ""
+    @State private var originalTopic: String = ""
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 20) {
-                SetGoal()
+            VStack(alignment: .leading, spacing: 39) {
+                SetGoal(topic: $topic)
                 GoalDuration()
                 Spacer()
             }
             .padding(.top,34)
-            //.padding(.horizontal)
+            .padding(.horizontal)
             .toolbar {
                 // Custom back button in the navigation bar
                 ToolbarItem(placement: .topBarLeading) {
@@ -36,8 +39,11 @@ struct LearningGoal: View {
                 // Trailing orange check button
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                      // Action
+                        if topic != originalTopic && !topic.isEmpty {
+                            showAlert = true
+                        }
                     }
+                   
                     label: {
                         Image(systemName: "checkmark")
                             .font(.system(size: 17, weight: .semibold))
@@ -48,18 +54,39 @@ struct LearningGoal: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            
+            
+            .alert("Update Learning goal", isPresented: $showAlert) {
+                Button("Dismiss", role: .cancel) {
+                    topic = originalTopic
+                }
+                
+                Button("Update") {
+                    originalTopic = topic
+                        
+                }
+                
+            }
+            message: {
+                Text("If you update now, your streak will start over.")
+            }
+            .onAppear {
+                originalTopic = topic
+            }
         }
     }
 }
 
 struct SetGoal: View {
+    @Binding var topic: String
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
                 Text("I want to learn")
                     .font(.system(size: 22))
                 
-                TextField("Swift", text: .constant(""))
+                TextField("Swift", text: $topic)
                     .padding(.vertical, 8)
                     .textFieldStyle(.plain)
                     .font(.system(size: 22))
