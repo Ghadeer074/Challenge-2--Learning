@@ -6,17 +6,16 @@
 //
 import SwiftUI
 
+
 struct LearningGoal: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var showAlert = false
-    @State private var topic: String = ""
-    @State private var originalTopic: String = ""
+    @StateObject private var viewModel = GoalVM()
 
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 39) {
-                SetGoal(topic: $topic)
-                GoalDuration()
+                SetGoal(topic: $viewModel.newTopic, topicChanged: viewModel.topicChanged)
+                GoalDuration(selectedDuration: $viewModel.selectedDuration, selectDuration: viewModel.selectDuration)
                 Spacer()
             }
             .padding(.top,34)
@@ -37,41 +36,40 @@ struct LearningGoal: View {
                         .foregroundStyle(.primary)
                 }
                 // Trailing orange check button
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        if topic != originalTopic && !topic.isEmpty {
-                            showAlert = true
+                if viewModel.showCheckButton {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            viewModel.checkButtonTapped()
                         }
-                    }
-                   
-                    label: {
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundStyle(.white)
-                            
-                           
+                       
+                        label: {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 17, weight: .semibold))
+                                .foregroundStyle(.white)
+                                .frame(width: 44, height: 44)
+                                .background(Color.orangeButton)
+                                .clipShape(Circle())
+                        }
                     }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            
-            
-            .alert("Update Learning goal", isPresented: $showAlert) {
-                Button("Dismiss", role: .cancel) {
-                    topic = originalTopic
+            .overlay {
+                if viewModel.showAlert {
+                    UpdateAlert(
+                        isPresented: $viewModel.showAlert,
+                        title: "Update Learning goal",
+                        message: "If you update now, your streak will start over.",
+                        dismissText: "Dismiss",
+                        updateText: "Update",
+                        onDismiss: {
+                            viewModel.dismissAlert()
+                        },
+                        onUpdate: {
+                            viewModel.updateGoal()
+                        }
+                    )
                 }
-                
-                Button("Update") {
-                    originalTopic = topic
-                        
-                }
-                
-            }
-            message: {
-                Text("If you update now, your streak will start over.")
-            }
-            .onAppear {
-                originalTopic = topic
             }
         }
     }
@@ -79,6 +77,7 @@ struct LearningGoal: View {
 
 struct SetGoal: View {
     @Binding var topic: String
+    let topicChanged: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -90,50 +89,61 @@ struct SetGoal: View {
                     .padding(.vertical, 8)
                     .textFieldStyle(.plain)
                     .font(.system(size: 22))
+                    .onChange(of: topic) { _, _ in
+                        topicChanged()
+                    }
                 
                 Divider()
                     .background(Color.gray.opacity(1))
-                
             }
         }
     }
 }
 
 struct GoalDuration: View {
+    @Binding var selectedDuration: Duration
+    let selectDuration: (Duration) -> Void
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 17) {
             Text("I want to learn it in a")
                 .font(.system(size: 22))
             // period selection
             HStack(alignment: .top, spacing: 12) {
-                Button(action: { }) {
+                Button(action: {
+                    selectDuration(.week)
+                }) {
                     Text("Week")
                         .font(.system(size: 15))
                         .foregroundStyle(Color.white)
                         .frame(width: 97, height: 48)
                         .background(
                             RoundedRectangle(cornerRadius: 120)
-                                .fill(Color.blackButtons)
+                                .fill(selectedDuration == .week ? Color.orangeButton : Color.blackButtons)
                         )
                 }
-                Button(action: { }) {
+                Button(action: {
+                    selectDuration(.month)
+                }) {
                     Text("Month")
                         .font(.system(size: 15))
                         .foregroundStyle(Color.white)
                         .frame(width: 97, height: 48)
                         .background(
                             RoundedRectangle(cornerRadius: 120)
-                                .fill(Color.orangeButton)
+                                .fill(selectedDuration == .month ? Color.orangeButton : Color.blackButtons)
                         )
                 }
-                Button(action: { }) {
+                Button(action: {
+                    selectDuration(.year)
+                }) {
                     Text("Year")
                         .font(.system(size: 15))
                         .foregroundStyle(Color.white)
                         .frame(width: 97, height: 48)
                         .background(
                             RoundedRectangle(cornerRadius: 120)
-                                .fill(Color.blackButtons)
+                                .fill(selectedDuration == .year ? Color.orangeButton : Color.blackButtons)
                         )
                 }
             }
@@ -141,6 +151,81 @@ struct GoalDuration: View {
         }
     }
 }
+
+
+struct UpdateAlert: View {
+    @Binding var isPresented: Bool
+    let title: String
+    let message: String
+    let dismissText: String
+    let updateText: String
+    let onDismiss: () -> Void
+    let onUpdate: () -> Void
+    
+    var body: some View {
+            
+                ZStack {
+                    // Background overlay
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            // Dismiss when tapping outside
+                        }
+                    
+                    // Alert box
+                    VStack(spacing: 20) {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(title)
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.white)
+                            
+                            Text(message)
+                                .font(.system(size: 15))
+                                .foregroundColor(.gray)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.top, 24)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        // Buttons
+                        HStack(spacing: 12) {
+                            Button(action: {
+                                onDismiss()
+                                isPresented = false
+                            }) {
+                                Text(dismissText)
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 50)
+                                    .background(Color.gray.opacity(0.3))
+                                    .cornerRadius(25)
+                            }
+                            
+                            Button(action: {
+                                onUpdate()
+                                isPresented = false
+                            }) {
+                                Text(updateText)
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 50)
+                                    .background(Color.orangeButton)
+                                    .cornerRadius(25)
+                            }
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 24)
+                    }
+                    .frame(width: 320)
+                    .background(Color(white: 0.15))
+                    .cornerRadius(30)
+                }
+            }
+        }
+    
 
 #Preview {
     LearningGoal()

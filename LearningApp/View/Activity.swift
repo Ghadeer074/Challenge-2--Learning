@@ -23,6 +23,7 @@ struct ActivityView: View {
                }
             }
         Spacer()
+        .navigationBarBackButtonHidden(true) 
         }
     }
 
@@ -84,7 +85,6 @@ struct Buttons: View{
                 .padding(.top, 10)
                 .padding(.bottom, 50)
         }
-        //.padding(.top, 210) // move the whole button group slightly down
     }
 }
 
