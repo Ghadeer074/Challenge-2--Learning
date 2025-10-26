@@ -1,5 +1,5 @@
 import SwiftUI
-//import Foundation
+import Foundation
 import Combine
 
 struct learningGoal {
@@ -23,4 +23,17 @@ enum Duration: String {
             return 96
         }
     }
+}
+
+enum DayStatus{
+    case learned
+    case freezed
+    case none
+}
+
+
+struct DayLog{
+    let date: Date
+    let status: DayStatus
+    
 }

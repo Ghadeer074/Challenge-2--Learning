@@ -50,7 +50,7 @@ struct Onboarding: View {
                         Text("I want to learn")
                             .font(.system(size: 22))
                         
-                        TextField("Shwift", text: $viewModel.topic)
+                        TextField("Swift", text: $viewModel.topic)
                             .padding()
                             .textFieldStyle(.plain)
                             .font(.system(size: 22))
@@ -143,7 +143,7 @@ struct Onboarding: View {
                     )
             }
             .navigationDestination(isPresented: $viewModel.navigateToActivity) {
-                ActivityView()
+                ActivityView(onboardingVM: viewModel)
             }
         }
     }

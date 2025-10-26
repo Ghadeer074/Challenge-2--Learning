@@ -16,26 +16,14 @@ class GoalVM: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var showCheckButton: Bool = false
     
-    init() {
-        loadCurrentGoal()
-    }
+    var activityVM: ActivityVM?
     
-    func loadCurrentGoal() {
-        // Load from UserDefaults
-        if let savedTopic = UserDefaults.standard.string(forKey: "savedTopic"),
-           let savedDurationString = UserDefaults.standard.string(forKey: "savedDuration"),
-           let savedDuration = Duration(rawValue: savedDurationString) {
-            currentTopic = savedTopic
-            newTopic = savedTopic
-            selectedDuration = savedDuration
-            freezes = UserDefaults.standard.integer(forKey: "savedFreezes")
-        } else {
-            
-            currentTopic = ""
-            newTopic = ""
-            selectedDuration = .month
-            freezes = 8
-        }
+    func loadCurrentGoal(from activityVM: ActivityVM) {
+        self.activityVM = activityVM
+        currentTopic = activityVM.topic
+        newTopic = activityVM.topic
+        selectedDuration = activityVM.selectedDuration
+        freezes = activityVM.totalFreezes
     }
     
     func topicChanged() {
@@ -44,6 +32,7 @@ class GoalVM: ObservableObject {
     
     func selectDuration(_ duration: Duration) {
         selectedDuration = duration
+        freezes = duration.freezeCount
     }
     
     func checkButtonTapped() {
@@ -62,20 +51,9 @@ class GoalVM: ObservableObject {
         currentTopic = newTopic
         showAlert = false
         showCheckButton = false
-        saveGoal()
-    }
-    
-     func saveGoal() {
-        let goal = learningGoal(
-            topic: currentTopic,
-            duration: selectedDuration,
-            freezes: freezes
-        )
         
-        // Save to UserDefaults
-        UserDefaults.standard.set(currentTopic, forKey: "savedTopic")
-        UserDefaults.standard.set(selectedDuration.rawValue, forKey: "savedDuration")
-        
-        print("Updated goal: \(goal)")
+        // Update ActivityViewModel
+        activityVM?.updateGoal(newTopic: newTopic, newDuration: selectedDuration)
     }
+   
 }

@@ -6,10 +6,10 @@
 //
 import SwiftUI
 
-
 struct LearningGoal: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = GoalVM()
+    var activityVM: ActivityVM
 
     var body: some View {
         NavigationStack {
@@ -21,7 +21,7 @@ struct LearningGoal: View {
             .padding(.top,34)
             .padding(.horizontal)
             .toolbar {
-                // Custom back button in the navigation bar
+                
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
                         dismiss()
@@ -36,7 +36,7 @@ struct LearningGoal: View {
                         .font(.system(size: 18, weight: .bold))
                         .foregroundStyle(.primary)
                 }
-                // Trailing orange check button
+                
                 if viewModel.showCheckButton {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
@@ -48,30 +48,32 @@ struct LearningGoal: View {
                                 .foregroundStyle(.white)
                                 
                         }
-                        //.buttonBorderShape(Capsule())
-                       // .background(Color.orange)
-                        .glassEffect(.clear)
+                       .buttonStyle(.borderedProminent)
+                       .tint(.orangeButton)
                     }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
-            .overlay {
-                if viewModel.showAlert {
-                    UpdateAlert(
-                        isPresented: $viewModel.showAlert,
-                        title: "Update Learning goal",
-                        message: "If you update now, your streak will start over.",
-                        dismissText: "Dismiss",
-                        updateText: "Update",
-                        onDismiss: {
+           
+            .alert("Update Learning goal",
+                   isPresented: $viewModel.showAlert,
+                   actions: {
+                        Button("Dismiss", role: .cancel) {
                             viewModel.dismissAlert()
-                        },
-                        onUpdate: {
-                            viewModel.updateGoal()
                         }
-                    )
-                }
+                       
+                        Button("Update") {
+                            viewModel.updateGoal()
+                            dismiss()
+                        }
+                   },
+                   message: {
+                        Text("If you update now, your streak will start over.")
+                   }
+            )
+            .onAppear {
+                viewModel.loadCurrentGoal(from: activityVM)
             }
         }
     }
@@ -154,81 +156,6 @@ struct GoalDuration: View {
     }
 }
 
-
-struct UpdateAlert: View {
-    @Binding var isPresented: Bool
-    let title: String
-    let message: String
-    let dismissText: String
-    let updateText: String
-    let onDismiss: () -> Void
-    let onUpdate: () -> Void
-    
-    var body: some View {
-            
-                ZStack {
-                    // Background overlay
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea()
-                        .onTapGesture {
-                            // Dismiss when tapping outside
-                        }
-                    
-                    // Alert box
-                    VStack(spacing: 20) {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text(title)
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(.white)
-                            
-                            Text(message)
-                                .font(.system(size: 15))
-                                .foregroundColor(.gray)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .padding(.horizontal, 24)
-                        .padding(.top, 24)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        // Buttons
-                        HStack(spacing: 12) {
-                            Button(action: {
-                                onDismiss()
-                                isPresented = false
-                            }) {
-                                Text(dismissText)
-                                    .font(.system(size: 17, weight: .semibold))
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 50)
-                                    .background(Color.gray.opacity(0.3))
-                                    .cornerRadius(25)
-                            }
-                            
-                            Button(action: {
-                                onUpdate()
-                                isPresented = false
-                            }) {
-                                Text(updateText)
-                                    .font(.system(size: 17, weight: .semibold))
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 50)
-                                    .background(Color.orangeButton)
-                                    .cornerRadius(25)
-                            }
-                        }
-                        .padding(.horizontal, 24)
-                        .padding(.bottom, 24)
-                    }
-                    .frame(width: 320)
-                    .background(Color(white: 0.15))
-                    .cornerRadius(30)
-                }
-            }
-        }
-    
-
 #Preview {
-    LearningGoal()
+    LearningGoal(activityVM: ActivityVM())
 }

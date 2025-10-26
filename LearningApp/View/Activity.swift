@@ -1,35 +1,31 @@
 import SwiftUI
 
-// MARK: - Model
-struct LearningSession {
-    var topic: String
-    var daysLearned: Int
-    var daysFreezed: Int
-    var freezesUsed: Int
-    var totalFreezes: Int
-}
-
-// MARK: - View
 struct ActivityView: View {
+    @StateObject private var viewModel = ActivityVM()
+    var onboardingVM: OnBoardingVM
+    
     var body: some View {
-        NavigationStack {
+        VStack(spacing: 31) {
+            NavBar(viewModel: viewModel)
+                .padding(.top, 47)
             
-            VStack(spacing: 31) {
-                NavBar().padding(.top, 47)
-                ProgressCard()
-                // log and freeze buttons
-                Buttons()
-             
-               }
-            }
-        Spacer()
-        .navigationBarBackButtonHidden(true) 
+            ProgressCard(viewModel: viewModel)
+            
+            Buttons(viewModel: viewModel)
+        }
+        .navigationBarBackButtonHidden(true)
+        .onAppear {
+            viewModel.loadGoal(topic: onboardingVM.topic, duration: onboardingVM.selectedDuration)
+            viewModel.checkCurrentDayStatus()
         }
     }
+}
 
-struct NavBar: View{
-    var body: some View{
-        HStack{
+struct NavBar: View {
+    @ObservedObject var viewModel: ActivityVM
+    
+    var body: some View {
+        HStack {
             Text("Activity")
                 .font(.system(size: 30, weight: .bold))
                 .foregroundColor(.white)
@@ -38,49 +34,60 @@ struct NavBar: View{
                 Image(systemName: "calendar")
                     .font(.system(size: 25))
                     .foregroundColor(.white)
-                    .frame(width:46,height:46)
+                    .frame(width: 46, height: 46)
                     .glassEffect(.clear)
             }
             Spacer().frame(width: 15)
-            NavigationLink(destination: LearningGoal()) {
+            NavigationLink(destination: LearningGoal(activityVM: viewModel)) {
                 Image(systemName: "pencil.and.outline")
                     .font(.system(size: 25))
                     .foregroundColor(.white)
-                    .frame(width:46,height:46)
+                    .frame(width: 46, height: 46)
                     .glassEffect(.clear)
             }
-           
         }
     }
 }
 
-struct Buttons: View{
-    var body: some View{
+struct Buttons: View {
+    @ObservedObject var viewModel: ActivityVM
+    
+    var body: some View {
         VStack(spacing: 10) {
-            Button(action: {}) {
-                Text("Log as Learned")
+            Button(action: {
+                if viewModel.canLogLearned {
+                    viewModel.logAsLearned()
+                }
+            }) {
+                Text(viewModel.learnedButtonText)
                     .font(.system(size: 45, weight: .semibold))
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .frame(width: 274, height: 274)
-                    .background(Color.orangeButton)
+                    .background(viewModel.learnedButtonColor)
                     .clipShape(Circle())
             }
             .glassEffect()
+            .disabled(!viewModel.canLogLearned && viewModel.currentDayStatus != .learned && viewModel.currentDayStatus != .freezed)
+            
             Spacer()
-            // Log as Freezed Button
-            Button(action: {}) {
+            
+            Button(action: {
+                if viewModel.canLogFreezed {
+                    viewModel.logAsFreezed()
+                }
+            }) {
                 Text("Log as Freezed")
                     .font(.system(size: 21, weight: .semibold))
                     .foregroundColor(.white)
                     .frame(width: 315, height: 50)
-                    .background(Color.blueTeal)
+                    .background(viewModel.freezeButtonEnabled ? Color.blueTeal : Color.blueTeal.opacity(0.3))
                     .cornerRadius(30)
             }
             .glassEffect()
+            .disabled(!viewModel.freezeButtonEnabled)
             
-            // Freezes counter
-            Text("0 out of 6 Freezes used")
+            Text(viewModel.freezeCounterText)
                 .font(.system(size: 15))
                 .foregroundColor(.gray)
                 .padding(.top, 10)
@@ -90,5 +97,5 @@ struct Buttons: View{
 }
 
 #Preview {
-    ActivityView()
+    ActivityView(onboardingVM: OnBoardingVM())
 }
