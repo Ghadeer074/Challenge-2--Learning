@@ -49,6 +49,7 @@ struct NavBar: View{
                     .frame(width:46,height:46)
                     .glassEffect(.clear)
             }
+           
         }
     }
 }

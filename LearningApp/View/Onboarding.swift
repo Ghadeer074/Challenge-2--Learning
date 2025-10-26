@@ -50,7 +50,7 @@ struct Onboarding: View {
                         Text("I want to learn")
                             .font(.system(size: 22))
                         
-                        TextField("Swift", text: $viewModel.topic)
+                        TextField("Shwift", text: $viewModel.topic)
                             .padding()
                             .textFieldStyle(.plain)
                             .font(.system(size: 22))

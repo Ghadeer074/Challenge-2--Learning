@@ -30,6 +30,7 @@ struct LearningGoal: View {
                             .font(.system(size: 17, weight: .semibold))
                     }
                 }
+                
                 ToolbarItem(placement: .principal) {
                     Text("Learning Goal")
                         .font(.system(size: 18, weight: .bold))
@@ -41,19 +42,20 @@ struct LearningGoal: View {
                         Button {
                             viewModel.checkButtonTapped()
                         }
-                       
                         label: {
                             Image(systemName: "checkmark")
                                 .font(.system(size: 17, weight: .semibold))
                                 .foregroundStyle(.white)
-                                .frame(width: 44, height: 44)
-                                .background(Color.orangeButton)
-                                .clipShape(Circle())
+                                
                         }
+                        //.buttonBorderShape(Capsule())
+                       // .background(Color.orange)
+                        .glassEffect(.clear)
                     }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
             .overlay {
                 if viewModel.showAlert {
                     UpdateAlert(

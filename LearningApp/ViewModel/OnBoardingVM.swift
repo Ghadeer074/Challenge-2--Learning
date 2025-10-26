@@ -10,7 +10,7 @@ import Combine
 
 class OnBoardingVM: ObservableObject {
     
-    @Published var topic: String = ""
+    @Published var topic: String = " "
     @Published var selectedDuration: Duration = .week
     @Published var freezes: Int = 2
     @Published var navigateToActivity: Bool = false
