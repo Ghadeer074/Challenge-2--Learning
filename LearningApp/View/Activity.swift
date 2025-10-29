@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct ActivityView: View {
     @StateObject private var viewModel = ActivityVM()
@@ -11,7 +12,15 @@ struct ActivityView: View {
             
             ProgressCard(viewModel: viewModel)
             
-            Buttons(viewModel: viewModel)
+            if viewModel.isGoalCompleted {
+                GoalCompletedView(onReset: {
+                    viewModel.resetStreak()
+                }, onSameGoal: {
+                    viewModel.updateGoal(newTopic: viewModel.topic, newDuration: viewModel.selectedDuration)
+                })
+            } else {
+                Buttons(viewModel: viewModel)
+            }
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {
@@ -20,9 +29,9 @@ struct ActivityView: View {
             }
             viewModel.checkCurrentDayStatus()
         }
-
     }
 }
+
 
 struct NavBar: View {
     @ObservedObject var viewModel: ActivityVM
@@ -95,9 +104,54 @@ struct Buttons: View {
                 .foregroundColor(.gray)
                 .padding(.top, 10)
                 .padding(.bottom, 50)
+        
+
         }
     }
 }
+struct GoalCompletedView: View {
+    let onReset: () -> Void
+    let onSameGoal: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            Spacer().frame(height: 40)
+            
+            VStack(spacing: 14) {
+                Image(systemName: "hands.clap.fill")
+                    .font(.system(size: 50))
+                    .foregroundColor(.orange)
+                
+                Text("Well done!")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.white)
+                
+                Text("Goal completed! Start learning again or set a new learning goal.")
+                    .font(.system(size: 15))
+                    .foregroundColor(.gray)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: 300)
+            }
+            
+            Button(action: onReset) {
+                Text("Set new learning goal")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.white)
+                    .frame(width: 300, height: 55)
+                    .background(Color.orangeButton)
+                    .cornerRadius(35)
+            }
+            .glassEffect()
+            
+            Button(action: onSameGoal) {
+                Text("Set same learning goal and duration")
+                    .font(.system(size: 15))
+                    .foregroundColor(.orange)
+            }
+        }
+    }
+}
+
 
 #Preview {
     ActivityView(onboardingVM: OnBoardingVM())

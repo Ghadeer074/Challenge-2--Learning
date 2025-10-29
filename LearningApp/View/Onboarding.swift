@@ -38,7 +38,7 @@ struct Onboarding: View {
                     Text("This app will help you learn everyday!")
                         .font(.system(size: 17))    
                         .colorMultiply(Color.gray)
-                        .padding(.trailing,80)
+                        .padding(.trailing,89)
                     Spacer()
                 }
                 
@@ -61,8 +61,7 @@ struct Onboarding: View {
                     
                     Divider()
                         .frame(maxWidth: .infinity)
-                        .ignoresSafeArea(edges: .horizontal)
-                        .background(Color.gray.opacity(1))
+                        .background(Color.gray.opacity(0.4))
                     
                     
                 }

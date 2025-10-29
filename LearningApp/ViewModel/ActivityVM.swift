@@ -49,6 +49,11 @@ class ActivityVM: ObservableObject {
         }
     }
     
+    var isGoalCompleted: Bool {
+        return (daysLearned + daysFreezed) >= selectedDuration.totalDays
+    }
+
+    
     private func saveDayLogs() {
         if let encoded = try? JSONEncoder().encode(dayLogs.mapValues { $0.rawValue }) {
             dayLogsData = encoded
