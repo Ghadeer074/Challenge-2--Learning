@@ -25,12 +25,9 @@ enum Duration: String {
     }
 }
 
-enum DayStatus{
-    case learned
-    case freezed
-    case none
+enum DayStatus: String, Codable {
+    case learned, freezed, none
 }
-
 
 struct DayLog{
     let date: Date

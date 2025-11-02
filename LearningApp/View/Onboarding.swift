@@ -46,7 +46,7 @@ struct Onboarding: View {
                 
                 //learning path
                 VStack(spacing: 2){
-                    VStack(spacing: 2){
+                    VStack(spacing: -22){
                         Text("I want to learn")
                             .font(.system(size: 22))
                         
@@ -72,7 +72,7 @@ struct Onboarding: View {
                 // Second section that was previously outside NavigationStack
                 VStack(alignment: .leading) {
                     Text("I want to learn it in a")
-                        .font(.system(size: 22))
+                        .font(.system(size: 19))
                         .padding()
                         .padding(.trailing,180)
                     

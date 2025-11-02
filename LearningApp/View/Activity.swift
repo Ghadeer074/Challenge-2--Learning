@@ -15,9 +15,12 @@ struct ActivityView: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {
-            viewModel.loadGoal(topic: onboardingVM.topic, duration: onboardingVM.selectedDuration)
+            if !viewModel.isInitialized {
+                viewModel.loadGoal(topic: onboardingVM.topic, duration: onboardingVM.selectedDuration)
+            }
             viewModel.checkCurrentDayStatus()
         }
+
     }
 }
 

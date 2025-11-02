@@ -51,9 +51,10 @@ class GoalVM: ObservableObject {
         currentTopic = newTopic
         showAlert = false
         showCheckButton = false
-        
+        print("Updating goal - new topic:\(newTopic), New duration:\(selectedDuration)")
         // Update ActivityViewModel
         activityVM?.updateGoal(newTopic: newTopic, newDuration: selectedDuration)
+        print("After Updating - ActivityVm topic:\(activityVM?.topic ?? "nil")")
     }
    
 }
