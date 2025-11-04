@@ -17,8 +17,8 @@ struct ProgressCard: View {
                     .font(.system(size: 17).bold())
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .onAppear {
-                            print("ProgressCard showing topic: \(viewModel.topic)")
-                        }
+                        print("ProgressCard showing topic: \(viewModel.topic)")
+                    }
                 Spacer().frame(height: 19)
 
                 HStack {
@@ -40,6 +40,7 @@ struct CalendarHeader: View {
     @State private var showingPicker = false
     @State private var selectedMonth = Calendar.current.component(.month, from: Date()) - 1
     @State private var selectedYear = Calendar.current.component(.year, from: Date())
+    @State private var timer: Timer?
     
     // new states for real-time & full-month weeks
     @State private var now = Date()
@@ -78,7 +79,6 @@ struct CalendarHeader: View {
         }
     }
     
-    // recompute all week starts for the selected month
     private func recomputeWeekStarts(for baseDate: Date) {
         let comps = calendar.dateComponents([.year, .month], from: baseDate)
         guard
@@ -87,10 +87,15 @@ struct CalendarHeader: View {
             let firstOfMonth = calendar.date(from: DateComponents(year: year, month: month, day: 1))
         else { return }
         
-        let firstWeekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: firstOfMonth))!
+        // Get start of the first week that touches the month
+        let firstWeekStart = calendar.date(
+            from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear],
+                                          from: firstOfMonth)
+        )!
         
         var starts: [Date] = []
         var s = firstWeekStart
+        
         while true {
             let days = (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: s) }
             let touchesMonth = days.contains { calendar.component(.month, from: $0) == month }
@@ -105,8 +110,19 @@ struct CalendarHeader: View {
         }
         
         weekStarts = starts
-        weekIndex = 0
+        
+        // Automatically show the current week that contains today's date
+        let today = Date()
+        if let idx = starts.firstIndex(where: {
+            let weekEnd = calendar.date(byAdding: .day, value: 6, to: $0)!
+            return (today >= $0 && today <= weekEnd)
+        }) {
+            weekIndex = idx
+        } else {
+            weekIndex = 0 // fallback
+        }
     }
+    
     
     private func applyMonthYearSelection() {
         var comps = DateComponents()
@@ -119,14 +135,39 @@ struct CalendarHeader: View {
             recomputeWeekStarts(for: newDate)
         }
     }
-    
     private func goToPreviousWeek() {
-        if weekIndex > 0 { weekIndex -= 1 }
+        if weekIndex > 0 {
+            weekIndex -= 1
+            currentDate = weekStarts[weekIndex]
+        } else {
+            // Move to previous month
+            if let previousMonth = calendar.date(byAdding: .month, value: -1, to: currentDate) {
+                currentDate = previousMonth
+                recomputeWeekStarts(for: previousMonth)
+                // Jump to last week of that month
+                weekIndex = max(weekStarts.count - 1, 0)
+            }
+        }
     }
     
     private func goToNextWeek() {
-        if weekIndex + 1 < weekStarts.count { weekIndex += 1 }
+        if weekIndex < weekStarts.count - 1 {
+            weekIndex += 1
+            currentDate = weekStarts[weekIndex]
+        } else {
+            // Move to next month
+            if let nextMonth = calendar.date(byAdding: .month, value: 1, to: currentDate) {
+                currentDate = nextMonth
+                recomputeWeekStarts(for: nextMonth)
+                weekIndex = 0
+            }
+        }
     }
+    
+    
+    //    private func goToNextWeek() {
+    //        if weekIndex + 1 < weekStarts.count { weekIndex += 1 }
+    //    }
     
     var body: some View {
         VStack {
@@ -237,9 +278,12 @@ struct CalendarHeader: View {
         }
         .onAppear {
             recomputeWeekStarts(for: currentDate)
+            timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
+                currentDate = Date()
+            }
         }
-        .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { tick in
-            now = tick // updates daily
+        .onDisappear {
+            timer?.invalidate()
         }
     }
     
@@ -264,7 +308,6 @@ struct CalendarHeader: View {
         }
     }
 }
-
 
 struct Learned: View {
     let count: Int
@@ -307,7 +350,6 @@ struct Freezed: View {
         .glassEffect(.clear.tint(Color.teal.opacity(0.23)))
     }
 }
-
 //#Preview {
 //  ProgressCard()
 //}

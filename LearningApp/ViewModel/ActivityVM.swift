@@ -88,6 +88,17 @@ class ActivityVM: ObservableObject {
     // MARK: - Check status
     func checkCurrentDayStatus() {
         let today = dateKey(Date())
+        
+        // If the stored last logged date was yesterday or older → new day, reset the currentDayStatus
+        if let lastLogged = lastLoggedDate {
+            if !Calendar.current.isDateInToday(lastLogged) {
+                currentDayStatus = .none
+                canLogToday = true
+                return
+            }
+        }
+
+        // Otherwise, check today’s status normally
         if let status = dayLogs[today] {
             currentDayStatus = status
             canLogToday = false
@@ -96,6 +107,7 @@ class ActivityVM: ObservableObject {
             checkIfCanLog()
         }
     }
+
     
     // MARK: - Log actions
     func logAsLearned() {
