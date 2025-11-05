@@ -33,13 +33,13 @@ struct NavBar: View {
                 .font(.system(size: 30, weight: .bold))
                 .foregroundColor(.white)
             Spacer().frame(width: 160)
-//            NavigationLink(destination: CalendarView()) {
-//                Image(systemName: "calendar")
-//                    .font(.system(size: 25))
-//                    .foregroundColor(.white)
-//                    .frame(width: 46, height: 46)
-//                    .glassEffect(.clear)
-//            }
+            NavigationLink(destination: CalendarView(activityVM: viewModel)) {
+                Image(systemName: "calendar")
+                    .font(.system(size: 25))
+                    .foregroundColor(.white)
+                    .frame(width: 46, height: 46)
+                    .glassEffect(.clear)
+            }
             Spacer().frame(width: 15)
             NavigationLink(destination: LearningGoal(activityVM: viewModel)) {
                 Image(systemName: "pencil.and.outline")
